@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+</head>
+<body>
+
+<script>
+  // Exemple : /pro/4
+  const parts = window.location.pathname.split("/").filter(Boolean);
+
+  const group = parts[0];
+  const id = parts[1];
+
+  // Si format correct : /pro/ID
+  if (group === "pro" && id) {
+    window.location.replace(`/pro/?id=${encodeURIComponent(id)}`);
+  } else {
+    // fallback vers home si route invalide
+    window.location.replace(`/`);
+  }
+</script>
+
+</body>
+</html>
