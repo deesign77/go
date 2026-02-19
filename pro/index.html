@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Pro Redirect</title>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-J0RLRLT786"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-J0RLRLT786');
+  </script>
+</head>
+
+<body>
+Redirection...
+
+<script>
+  // ===== CONFIG =====
+  const GROUP = "pro";
+  const WORKER_URL = "https://nfc-tracker.santesqua.workers.dev/log";
+  const SECRET = "nbkbkF19_2026";
+
+  // ⚠️ Mets ici ton lien Bridge / destination PRO
+  const DEST_URL = "https://share.bridge.audio/sante-music/sante?id=cb8c48de-2aba-41b1-b8fa-dcdde19be381";
+
+  // (Optionnel) whitelist des IDs PRO, même logique que access
+  const allowedIds = ["001","002","003","004","005","006","007","008","009","010",
+                      "011","012","013","014","015","016","017","018","019","020"];
+
+  function getRawId() {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("id");
+    if (q) return q;
+
+    const parts = window.location.pathname.split("/").filter(Boolean);
+    return parts[parts.length - 1]; // ex: /pro/2 -> "2"
+  }
+
+  const raw = (getRawId() || "").trim();
+  const num = parseInt(raw, 10);
+  const id3 = Number.isFinite(num) ? String(num).padStart(3, "0") : raw;
+
+  if (!allowedIds.includes(id3)) {
+    document.body.innerHTML = "Pro access not available";
+  } else {
+
+    // 1) Google Analytics event (non bloquant)
+    try {
+      gtag("event", "nfc_scan", { group: GROUP, code: id3 });
+    } catch(e) {}
+
+    // 2) Log vers Cloudflare Worker
+    try {
+      const qs = new URLSearchParams({
+        token: SECRET,
+        group: GROUP,
+        code: id3,
+        path: window.location.pathname + window.location.search,
+        ref: document.referrer || "",
+        ua: navigator.userAgent || "",
+        lang: navigator.language || ""
+      });
+
+      const url = WORKER_URL + "?" + qs.toString();
+
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(url);
+      } else {
+        fetch(url, { mode: "no-cors", keepalive: true });
+      }
+    } catch(e) {}
+
+    // 3) Redirection fluide
+    setTimeout(() => {
+      window.location.replace(DEST_URL);
+    }, 150);
+  }
+</script>
+
+</body>
+</html>
