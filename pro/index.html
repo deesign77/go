@@ -39,8 +39,7 @@ Redirection...
   }
 
   const raw = (getRawId() || "").trim();
-  const num = parseInt(raw, 10);
-  const id3 = Number.isFinite(num) ? String(num).padStart(3, "0") : raw;
+  const id3 = raw.toUpperCase();
 
   if (!allowedIds.includes(id3)) {
     document.body.innerHTML = "Pro access not available";
