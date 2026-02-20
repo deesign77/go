@@ -32,7 +32,7 @@ Redirection...
 
   // 1) Google Analytics event (non bloquant)
   try {
-    gtag("event", "nfc_scan", { group: GROUP, code: CODE || "public" });
+    gtag("event", "nfc_scan", { group: GROUP, code: CODE || "Midem" });
   } catch(e) {}
 
   // 2) Log vers Cloudflare Worker
