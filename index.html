@@ -19,7 +19,7 @@ Redirection...
 
 <script>
   // ===== CONFIG =====
-  const GROUP = "public";
+  const GROUP = "Midem";
   const WORKER_URL = "https://nfc-tracker.santesqua.workers.dev/log";
   const SECRET = "nbkbkF19_2026";
 
@@ -32,7 +32,7 @@ Redirection...
 
   // 1) Google Analytics event (non bloquant)
   try {
-    gtag("event", "nfc_scan", { group: GROUP, code: CODE || "Midem" });
+    gtag("event", "nfc_scan", { group: GROUP, code: CODE || "public_root" });
   } catch(e) {}
 
   // 2) Log vers Cloudflare Worker
