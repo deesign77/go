@@ -1,11 +1,66 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="refresh" content="0; url=https://share.bridge.audio/sante-music/sante?id=cb8c48de-2aba-41b1-b8fa-dcdde19be381">
-    <title>Redirection</title>
-  </head>
-  <body>
-    Redirection…
-  </body>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Public Redirect</title>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-J0RLRLT786"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-J0RLRLT786');
+  </script>
+</head>
+
+<body>
+Redirection...
+
+<script>
+  // ===== CONFIG =====
+  const GROUP = "public";
+  const WORKER_URL = "https://nfc-tracker.santesqua.workers.dev/log";
+  const SECRET = "nbkbkF19_2026";
+
+  // ⚠️ Mets ici ton lien Bridge / destination PUBLIC
+  const DEST_URL = "https://share.bridge.audio/sante-music/sante?id=cb8c48de-2aba-41b1-b8fa-dcdde19be381";
+
+  // Code vide (comme tu voulais) :
+  // - si tu préfères voir une valeur dans la colonne "Code", remplace par "PUBLIC"
+  const CODE = "";
+
+  // 1) Google Analytics event (non bloquant)
+  try {
+    gtag("event", "nfc_scan", { group: GROUP, code: CODE || "public" });
+  } catch(e) {}
+
+  // 2) Log vers Cloudflare Worker
+  try {
+    const qs = new URLSearchParams({
+      token: SECRET,
+      group: GROUP,
+      code: CODE, // vide => pas de numéro dans le Google Sheet
+      path: window.location.pathname + window.location.search,
+      ref: document.referrer || "",
+      ua: navigator.userAgent || "",
+      lang: navigator.language || ""
+    });
+
+    const url = WORKER_URL + "?" + qs.toString();
+
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(url);
+    } else {
+      fetch(url, { mode: "no-cors", keepalive: true });
+    }
+  } catch(e) {}
+
+  // 3) Redirection fluide
+  setTimeout(() => {
+    window.location.replace(DEST_URL);
+  }, 150);
+</script>
+
+</body>
 </html>
