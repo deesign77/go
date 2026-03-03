@@ -25,6 +25,10 @@ Redirection...
 
   // ⚠️ Mets ici ton lien Bridge / destination PRO
   const DEST_URL = "https://share.bridge.audio/sante-music/sante?id=cb8c48de-2aba-41b1-b8fa-dcdde19be381";
+  // ✅ Exception : ce code va vers une autre destination
+const EXCEPTIONS = {
+  "XE06RZIZ": "https://share.bridge.audio/sante-music/sante-morceauxprod?id=f334be15-eb20-4dc3-8dac-6b7227e3c23d"
+};
 
   // (Optionnel) whitelist des IDs PRO, même logique que access
   const allowedIds = ["YF3ZEF97","H1UN2NFQ","XE06RZIZ","LGBU0VG8","NTWAOB5V","0UTHNGGQ"];
@@ -73,7 +77,8 @@ Redirection...
 
     // 3) Redirection fluide
     setTimeout(() => {
-      window.location.replace(DEST_URL);
+      const finalUrl = EXCEPTIONS[id3] || DEST_URL;
+window.location.replace(finalUrl);
     }, 150);
   }
 </script>
